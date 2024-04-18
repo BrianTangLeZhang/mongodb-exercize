@@ -6,9 +6,18 @@ const Movie = require("../models/Movie");
 router.get("/", async (req, res) => {
   try {
     let movies = await Movie.find();
-    if (req.query.genre) movies = await Movie.find({ genre: req.query.genre });
-    if (req.query.rating)
+    if (req.query.rating) {
       movies = await Movie.find({ rating: { $gt: req.query.rating } });
+    }
+    if (req.query.genre) {
+      movies = await Movie.find({ genre: req.query.genre });
+    }
+    if (req.query.genre && req.query.rating) {
+      movies = await Movie.find({
+        genre: req.query.genre,
+        rating: { $gt: req.query.rating },
+      });
+    }
     if (movies) {
       res.status(200).send(movies);
     } else {
