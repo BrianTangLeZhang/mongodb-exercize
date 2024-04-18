@@ -5,19 +5,30 @@ const Movie = require("../models/Movie");
 //create express router for "movies"
 router.get("/", async (req, res) => {
   try {
-    let movies = await Movie.find();
+    // let movies = await Movie.find();
+    // if (req.query.rating) {
+    //   movies = await Movie.find({ rating: { $gt: req.query.rating } });
+    // }
+    // if (req.query.genre) {
+    //   movies = await Movie.find({ genre: req.query.genre });
+    // }
+    // if (req.query.genre && req.query.rating) {
+    //   movies = await Movie.find({
+    //     genre: req.query.genre,
+    //     rating: { $gt: req.query.rating },
+    //   });
+    // }
+    let filters = {};
     if (req.query.rating) {
-      movies = await Movie.find({ rating: { $gt: req.query.rating } });
+      filters.rating = { $gt: req.query.rating };
     }
     if (req.query.genre) {
-      movies = await Movie.find({ genre: req.query.genre });
+      filters.genre = req.query.genre;
     }
-    if (req.query.genre && req.query.rating) {
-      movies = await Movie.find({
-        genre: req.query.genre,
-        rating: { $gt: req.query.rating },
-      });
+    if (req.query.director) {
+      filters.director = req.query.director;
     }
+    const movies = await Movie.find(filters);
     if (movies) {
       res.status(200).send(movies);
     } else {
