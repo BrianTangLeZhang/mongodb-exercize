@@ -5,6 +5,9 @@ const mongoose = require("mongoose");
 //create express app
 const app = express();
 
+//middleware to handle JSON request
+app.use(express.json());
+
 //connect to mongoDB
 mongoose
   .connect("mongodb://127.0.0.1:27017/netflix")
@@ -18,6 +21,6 @@ app.use("/shows", require("./routes/show"));
 app.use("/shows/:id", require("./routes/show"));
 
 //start server
-app.listen(1226, () => {
-  console.log("Server is running on: http://localhost:1226");
+app.listen(5000, () => {
+  console.log("Server is running on: http://localhost:5000");
 });
