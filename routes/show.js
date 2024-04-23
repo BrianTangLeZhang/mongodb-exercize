@@ -1,21 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const Show = require("../models/Show");
-const { addShow, updateShow, deleteShow } = require("../controllers/show");
+const { addShow, updateShow, deleteShow, getShowsById, getShows } = require("../controllers/show");
 
 //create express router for "movies"
 router.get("/", async (req, res) => {
   try {
-    let shows = await Show.find();
-    if (req.query.genre) shows = await Show.find({ genre: req.query.genre });
-    if (req.query.rating)
-      shows = await Show.find({ rating: { $gt: req.query.rating } });
+    let filters = {};
+    if (req.query.genre) filters.genre = req.query.genre;
+    if (req.query.rating) filters.rating = { $gt: req.query.rating };
     if (req.query.premiere_year) {
-      const num = parseInt(req.query.premiere_year);
-      shows = await Show.find({
-        premiere_year: { $gt: num },
-      });
+      filters.premiere_year = { $gt: parseInt(req.query.premiere_year) };
     }
+    const shows = await getShows(filters);
     if (shows) {
       res.status(200).json(shows);
     } else {
@@ -28,7 +25,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const show = await Show.findById(req.params.id);
+    const show = await getShowsById(req.params.id);
     if (show) {
       res.status(200).json(show);
     } else {
@@ -73,7 +70,7 @@ router.put("/:id", async (req, res) => {
         rating: req.body.rating,
       };
       const updatedShow = await updateShow(id, show);
-      res.status(200).json("Show updated successfully");
+      res.status(200).json(updatedShow);
     }
   } catch (e) {
     res.status(400).json({ msg: e.message });
