@@ -1,15 +1,15 @@
 const Movie = require("../models/Movie");
 
-const getMovies = async (genre, rating) => {
+const getMovies = async (genre, sort) => {
   try {
     let filters = {};
-    if (rating) {
-      filters.rating = { $gt: rating };
-    }
+    let sortQuery = { _id: 1 };
     if (genre) {
       filters.genre = genre;
     }
-    const movies = await Movie.find(filters);
+    if (sort === "title") sortQuery = { title: 1 };
+    if (sort === "rating") sortQuery = { rating: -1 };
+    const movies = await Movie.find(filters).sort(sortQuery);
     return movies;
   } catch (e) {
     throw new Error(e);

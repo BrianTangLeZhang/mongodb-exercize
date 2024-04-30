@@ -6,20 +6,16 @@ const { addShow, updateShow, deleteShow, getShowsById, getShows } = require("../
 //create express router for "movies"
 router.get("/", async (req, res) => {
   try {
-    let filters = {};
-    if (req.query.genre) filters.genre = req.query.genre;
-    if (req.query.rating) filters.rating = { $gt: req.query.rating };
-    if (req.query.premiere_year) {
-      filters.premiere_year = { $gt: parseInt(req.query.premiere_year) };
-    }
-    const shows = await getShows(filters);
+    const genre = req.query.genre;
+    const sort = req.query.sort;
+    const shows = await getShows(genre, sort);
     if (shows) {
-      res.status(200).json(shows);
+      res.status(200).send(shows);
     } else {
-      res.status(404).json("Shows not found");
+      res.status(404).send("Shows not found");
     }
   } catch (e) {
-    res.status(400).json({ msg: e.message });
+    res.status(400).send({ msg: e.message });
   }
 });
 

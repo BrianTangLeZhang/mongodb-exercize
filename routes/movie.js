@@ -7,8 +7,8 @@ const { getMovies, addMovie } = require("../controllers/movie");
 router.get("/", async (req, res) => {
   try {
     const genre = req.query.genre;
-    const rating = req.query.rating;
-    const movies = await getMovies(genre, rating);
+    const sort = req.query.sort;
+    const movies = await getMovies(genre, sort);
     if (movies) {
       res.status(200).send(movies);
     } else {

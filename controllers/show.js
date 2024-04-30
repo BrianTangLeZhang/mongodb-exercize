@@ -1,8 +1,15 @@
 const Show = require("../models/Show");
 
-const getShows = async (filters) => {
+const getShows = async (genre, sort) => {
   try {
-    const shows = await Show.find(filters);
+    let filters = {};
+    let sortQuery = { _id: 1 };
+    if (genre) {
+      filters.genre = genre;
+    }
+    if (sort === "title") sortQuery = { title: 1 };
+    if (sort === "rating") sortQuery = { rating: -1 };
+    const shows = await Show.find(filters).sort(sortQuery);
     return shows;
   } catch (e) {
     throw new Error(e);
